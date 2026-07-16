@@ -1,60 +1,96 @@
 # Ubuntu24CIS
 
+## Based on CIS v1.0.0 - July 2026
+
+### Fixed
+
+- tasks/section_2/cis_2.1.x.yml line 642: Corrected service name typo `ngnix.service` to `nginx.service`
+- defaults/main.yml: Set `audit_run_heavy_tests` default to `false` (opt-in convention — avoids slow tests in CI by default)
+- defaults/main.yml: Moved 7 internal audit constants to `vars/audit.yml` where they belong (`audit_max_concurrent`, `get_audit_binary_method`, `audit_bin_copy_location`, `audit_content`, `audit_conf_source`, `audit_conf_dest`, `audit_log_dir`) — these are role implementation details that should not be user-overridable
+- vars/CIS.yml (audit repo): Corrected `benchmark_version` from `2.0.0` to `1.0.0`
+- molecule/localhost/converge.yml, molecule/wsl/converge.yml: Added `setup_audit: true` and `run_audit: true` so molecule runs the full audit on converge
+- .github/workflows/export_badges_public.yml: Removed — this workflow is for public mirrors only and must not be present in a private repo
+- CONTRIBUTING.md: Added — was missing from remediation repo
+- 15 manual controls: Changed tag from `patch` to `audit` — these controls require manual intervention and must not perform active remediation: 1.1.1.10, 1.2.2.1, 3.1.1, 4.2.5, 4.4.2.3, 4.4.3.3, 5.3.3.2.3, 5.4.1.2, 6.1.1.3, 6.1.2.1.2, 6.1.3.5, 6.1.3.6, 6.1.3.8, 6.2.3.21
+- updated 1.1.1.10 to be able to set location the script runs from
+- ability to change default shell for shell module calls
+- Converted ansible dot-notation references to bracket notation
+- improved 5.2.4 tests and prelim check
+- aligned audit variable naming wih remediation vars
+- removed unneeded handlers
+- tidy up audit variables
+- Thanks to @bykvaadm
+  - #157 PAM update
+  - #168 sshd fix
+  - #169 bootloader file permissions also thanks to @alexmroke
+  - #176 dot file. excludion addition 7.2.10
+- Thanks to seven-beep
+  - #171 os_check addition
+- thanks to @dderemiah
+  - #167 pam improvements
+- thanks to @hackery
+  - #175 overlay mod change 1.1.1.6
+- thanks to @defnotyujine
+  - tmp mount handler changed to import_tasks
+- 100 task files: Converted `ansible_facts` dot notation to bracket notation throughout `tasks/` and `vars/`
+- Added `set -o pipefail` and `args: executable: /bin/bash` to tasks with pipes
+- templates/ansible_vars_goss.yml.j2: Renamed to `templates/lockdown_audit.yml.j2`  updated reference in `tasks/pre_remediation_audit.yml`
+
 ## Based on CIS v1.0.0 - Branch [2026_April_QA]
 
 ### QA Validation
 
-**Molecule Results:** Converge PASSED (ok=151, changed=7, failed=0), Verify PASSED (audit: 122 failures)
+Molecule Results: Converge PASSED (ok=151, changed=7, failed=0), Verify PASSED (audit: 122 failures)
 
 #### Fixed (Pre-QA Checks)
 
-- **vars/CIS.yml (audit):** Fixed benchmark_version from '2.0.0' to '1.0.0'
-- **README.md:** Removed RHEL dependencies (python-def, libselinux-python), updated to Python3.12+/Ansible 2.16+
-- **.gitignore:** Added secret file patterns and QA artifact patterns
-- **tasks/main.yml:** Added `community.docker.docker` to container connection detection
+- vars/CIS.yml (audit): Fixed benchmark_version from '2.0.0' to '1.0.0'
+- README.md: Removed RHEL dependencies (python-def, libselinux-python), updated to Python3.12+/Ansible 2.16+
+- .gitignore: Added secret file patterns and QA artifact patterns
+- tasks/main.yml: Added `community.docker.docker` to container connection detection
 
 #### Changed (Standards Alignment)
 
-- **48 shell tasks:** Added `set -o pipefail` with `args: executable: /bin/bash`
-- **cis_2.1.x.yml, cis_3.1.x.yml:** Applied package-aware ternary masking to 21 systemd mask tasks
-- **62 discovery tasks:** Added `check_mode: false`
-- **44 discovery tasks:** Specific `failed_when: <var>.rc not in [0, 1]` replacing broad `failed_when: false`
-- **5 tasks:** Fixed absolute mode notation to relative
-- **12 tasks:** Converted single-item `when:`/`notify:` to inline
-- **80 loop tasks:** Added `loop_control: label`
+- 48 shell tasks: Added `set -o pipefail` with `args: executable: /bin/bash`
+- cis_2.1.x.yml, cis_3.1.x.yml: Applied package-aware ternary masking to 21 systemd mask tasks
+- 62 discovery tasks: Added `check_mode: false`
+- 44 discovery tasks: Specific `failed_when: <var>.rc not in [0, 1]` replacing broad `failed_when: false`
+- 5 tasks: Fixed absolute mode notation to relative
+- 12 tasks: Converted single-item `when:`/`notify:` to inline
+- 80 loop tasks: Added `loop_control: label`
 
 #### Security
 
-- **7 tasks:** Added `no_log: true` to `/etc/shadow` tasks
+- 7 tasks: Added `no_log: true` to `/etc/shadow` tasks
 
 #### Fixed (Molecule Findings)
 
-- **vars/is_container.yml:** Added missing `ubtu24cis_rule_6_2_2_4`
-- **3 escaped quotes:** Fixed after pipefail conversion
-- **7 pwck tasks:** Reverted to `failed_when: false` (SIGPIPE rc=141)
+- vars/is_container.yml: Added missing `ubtu24cis_rule_6_2_2_4`
+- 3 escaped quotes: Fixed after pipefail conversion
+- 7 pwck tasks: Reverted to `failed_when: false` (SIGPIPE rc=141)
 
 #### Added
 
-- **molecule/default/:** Docker test scenario for Ubuntu 24.04 with audit verification
-- **molecule/localhost/:** Delegated local test scenario
-- **molecule/wsl/:** WSL delegated test scenario
+- molecule/default/: Docker test scenario for Ubuntu 24.04 with audit verification
+- molecule/localhost/: Delegated local test scenario
+- molecule/wsl/: WSL delegated test scenario
 
 #### Title Alignment
 
-- **92 task titles:** Updated to match CIS Ubuntu Linux 24.04 LTS Benchmark v1.0.0 titles exactly
+- 92 task titles: Updated to match CIS Ubuntu Linux 24.04 LTS Benchmark v1.0.0 titles exactly
 
 #### Additional Fixes
 
-- **defaults/main.yml:** Aligned header structure with UB22 standard — added role identification, variable precedence warning, `system_is_container`, UID discovery variables, `system_is_ec2`, `skip_for_test`. Removed duplicate variables.
-- **meta/main.yml, vars/main.yml:** Updated `min_ansible_version` from 2.12.1 to 2.16.1
-- **vars/main.yml:** Fixed `company_title` casing — `Mindpoint` → `MindPoint`
+- defaults/main.yml: Aligned header structure with UB22 standard — added role identification, variable precedence warning, `system_is_container`, UID discovery variables, `system_is_ec2`, `skip_for_test`. Removed duplicate variables.
+- meta/main.yml, vars/main.yml: Updated `min_ansible_version` from 2.12.1 to 2.16.1
+- vars/main.yml: Fixed `company_title` casing — `Mindpoint` → `MindPoint`
 
 #### Issue Resolution
 
-- **tasks/prelim.yml:** Fixed mount option gathering to preserve `/etc/fstab` source entries (UUID=, PARTUUID=, LABEL=) instead of using volatile `/dev/sdX` device names from `mount` output — addresses #162, thank you @samicemalone
-- **defaults/main.yml:** Added commented `sntrup761x25519-sha512` post-quantum KEX algorithm option — addresses #156, thank you @cagriersen
-- **templates/tmp.mount.j2:** Fixed systemd mount unit syntax `Options:` → `Options=` — addresses PR #163, thank you @kevingunn-wk
-- **defaults/main.yml:** Added `ubtu24cis_tmp_partition_mount_options` variable for tmp.mount systemd unit — addresses PR #163
+- tasks/prelim.yml: Fixed mount option gathering to preserve `/etc/fstab` source entries (UUID=, PARTUUID=, LABEL=) instead of using volatile `/dev/sdX` device names from `mount` output — addresses #162, thank you @samicemalone
+- defaults/main.yml: Added commented `sntrup761x25519-sha512` post-quantum KEX algorithm option — addresses #156, thank you @cagriersen
+- templates/tmp.mount.j2: Fixed systemd mount unit syntax `Options:` → `Options=` — addresses PR #163, thank you @kevingunn-wk
+- defaults/main.yml: Added `ubtu24cis_tmp_partition_mount_options` variable for tmp.mount systemd unit — addresses PR #163
 
 #### QA Results
 
