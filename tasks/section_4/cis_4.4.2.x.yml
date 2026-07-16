@@ -97,7 +97,7 @@
   tags:
     - level1-server
     - level1-workstation
-    - patch
+    - audit
     - rule_4.4.2.3
     - NIST800-53R5_CA-9
     - NIST800-53R5_SC-7

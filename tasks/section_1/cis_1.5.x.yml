@@ -94,7 +94,7 @@
 - name: "1.5.4 | PATCH | Ensure prelink is not installed"
   when:
     - ubtu24cis_rule_1_5_4
-    - "'prelink' in ansible_facts.packages"
+    - "'prelink' in ansible_facts['packages']"
   tags:
     - level1-server
     - level1-workstation
@@ -138,7 +138,7 @@
         mode: 'go-r'
 
     - name: "1.5.5 | PATCH | Ensure Automatic Error Reporting is not enabled | remove package"
-      when: "'apport' in ansible_facts.packages"
+      when: "'apport' in ansible_facts['packages']"
       ansible.builtin.package:
         name: apport
         state: absent

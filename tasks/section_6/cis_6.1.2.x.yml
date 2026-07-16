@@ -25,7 +25,7 @@
   tags:
     - level1-server
     - level1-workstation
-    - patch
+    - audit
     - journald
     - rule_6.1.2.1.2
     - NIST800-53R5_AU-2

@@ -6,7 +6,7 @@
 
 ---
 
-## Public Repository 📣
+## Public Repository
 
 ![Org Stars](https://img.shields.io/github/stars/ansible-lockdown?label=Org%20Stars&style=social)
 ![Stars](https://img.shields.io/github/stars/ansible-lockdown/UBUNTU24-CIS?label=Repo%20Stars&style=social)
@@ -17,13 +17,13 @@
 
 ![License](https://img.shields.io/github/license/ansible-lockdown/UBUNTU24-CIS?label=License)
 
-## Lint & Pre-Commit Tools 🔧
+## Lint & Pre-Commit Tools
 
 
 ![YamlLint](https://img.shields.io/badge/yamllint-Present-brightgreen?style=flat&logo=yaml&logoColor=white)
 ![Ansible-Lint](https://img.shields.io/badge/ansible--lint-Present-brightgreen?style=flat&logo=ansible&logoColor=white)
 
-## Community Release Information 📂
+## Community Release Information
 
 ![Release Branch](https://img.shields.io/badge/Release%20Branch-Main-brightgreen)
 ![Release Tag](https://img.shields.io/github/v/tag/ansible-lockdown/UBUNTU24-CIS?label=Release%20Tag&&color=success)
@@ -43,7 +43,7 @@
 
 ---
 
-## Subscriber Release Information 🔐
+## Subscriber Release Information
 
 ![Private Release Branch](https://img.shields.io/endpoint?url=https://ansible-lockdown.github.io/github_linux_IaC/badges/Private-UBUNTU24-CIS/release-branch.json)
 ![Private Benchmark Version](https://img.shields.io/endpoint?url=https://ansible-lockdown.github.io/github_linux_IaC/badges/Private-UBUNTU24-CIS/benchmark-version.json)
@@ -55,25 +55,25 @@
 
 ---
 
-## Looking for support? 🤝
+## Looking for support?
 
 [Lockdown Enterprise](https://www.lockdownenterprise.com#GH_AL_UBUNTU24_CIS)
 
 [Ansible support](https://www.mindpointgroup.com/cybersecurity-products/ansible-counselor#GH_AL_UBUNTU24_CIS)
 
-### Community 💬
+### Community
 
 On our [Discord Server](https://www.lockdownenterprise.com/discord) to ask questions, discuss features, or just chat with other Ansible-Lockdown users
 
 ---
 
-## 🚨 Caution(s) 🚨
+## Caution(s)
 
 This role **will make changes to the system** which may have unintended consequences. This is not an auditing tool but rather a remediation tool to be used after an audit has been conducted.
 
 - Testing is the most important thing you can do.
 
-- Check Mode is not guaranteed! 🚫 The role will complete in check mode without errors, but it is not supported and should be used with caution.
+- Check Mode is not guaranteed! The role will complete in check mode without errors, but it is not supported and should be used with caution.
 
 - This role was developed against a clean install of the Operating System. If you are implementing to an existing system please review this role for any site specific changes that are needed.
 
@@ -83,7 +83,7 @@ This role **will make changes to the system** which may have unintended conseque
 
 ---
 
-## Coming From A Previous Release ⏪
+## Coming From A Previous Release
 
 CIS release always contains changes, it is highly recommended to review the new references and available variables. This have changed significantly since ansible-lockdown initial release.
 This is now compatible with python3 if it is found to be the default interpreter. This does come with pre-requisites which it configures the system accordingly.
@@ -105,7 +105,7 @@ This is managed using tags:
 The control found in defaults main also need to reflect this as this control the testing that takes place if you are using the audit component.
 
 ---
-## Requirements ✅
+## Requirements
 
 **General:**
 
@@ -130,13 +130,13 @@ UBUNTU 24 - Other versions are not supported.
 
 ---
 
-## Auditing 🔍
+## Auditing
 
 This can be turned on or off within the defaults/main.yml file with the variable run_audit. The value is false by default, please refer to the wiki for more details. The defaults file also populates the goss checks to check only the controls that have been enabled in the ansible role.
 
 This is a much quicker, very lightweight, checking (where possible) config compliance and live/running settings.
 
-A new form of auditing has been developed, by using a small (12MB) go binary called [goss](https://github.com/goss-org/goss) along with the relevant configurations to check. Without the need for infrastructure or other tooling.
+A new form of auditing has been developed, by using a small (16MB) go binary called [goss](https://github.com/krameff/goss) along with the relevant configurations to check. Without the need for infrastructure or other tooling.
 This audit will not only check the config has the correct setting but aims to capture if it is running with that configuration also trying to remove [false positives](https://www.mindpointgroup.com/blog/is-compliance-scanning-still-relevant/) in the process.
 
 Refer to [UBUNTU24-CIS-Audit](https://github.com/ansible-lockdown/UBUNTU24-CIS-Audit).
@@ -148,11 +148,10 @@ Note: More tests are run during audit as we check config and running state.
 
 ```txt
 
-ok: [default] => {
+ok: [ubuntu2404] => {
     "msg": [
-        "msg": [
-        "The pre remediation audit results are: Count: 763, Failed: 234, Skipped: 4, Duration: 9.741s",
-        "The post remediation audit results are: Count: 763, Failed: 19, Skipped: 4, Duration: 12.725s",
+        "The pre remediation audit results are: Count: 778, Failed: 330, Skipped: 38, Duration: 3.609s",
+        "The post remediation audit results are: Count: 778, Failed: 26, Skipped: 5, Duration: 4.280s",
         "Full breakdown can be found in /opt",
         ""
     ]
@@ -162,7 +161,7 @@ PLAY RECAP *********************************************************************
 default                    : ok=270  changed=23   unreachable=0    failed=0    skipped=140  rescued=0    ignored=0
 ```
 
-## Documentation 📖
+## Documentation
 
 - [Read The Docs](https://ansible-lockdown.readthedocs.io/en/latest/)
 - [Getting Started](https://www.lockdownenterprise.com/docs/getting-started-with-lockdown#GH_AL_UBUNTU24_cis)
@@ -175,7 +174,7 @@ default                    : ok=270  changed=23   unreachable=0    failed=0    s
 
 This role is designed that the end user should not have to edit the tasks themselves. All customizing should be done via the defaults/main.yml file or with extra vars within the project, job, workflow, etc.
 
-## Tags 🏷️
+## Tags
 
 There are many tags available for added control precision. Each control has its own set of tags noting what level, what OS element it relates to, whether it's a patch or audit, and the rule number. Additionally, NIST references follow a specific conversion format for consistency and clarity.
 
