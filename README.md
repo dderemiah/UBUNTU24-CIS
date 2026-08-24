@@ -65,6 +65,12 @@
 
 On our [Discord Server](https://www.lockdownenterprise.com/discord) to ask questions, discuss features, or just chat with other Ansible-Lockdown users
 
+### Contributing
+
+Bug reports and feature requests are welcome from everyone, please raise an issue.
+
+Pull requests are accepted from approved contributors only. To be onboarded, join the [Discord Server](https://www.lockdownenterprise.com/discord) and request contributor access. See [CONTRIBUTING.md](CONTRIBUTING.md) for the full process.
+
 ---
 
 ## Caution(s)
@@ -111,10 +117,10 @@ The control found in defaults main also need to reflect this as this control the
 
 - Basic knowledge of Ansible, below are some links to the Ansible documentation to help get started if you are unfamiliar with Ansible
 
-  - [Main Ansible documentation page](https://docs.ansible.com)
-  - [Ansible Getting Started](https://docs.ansible.com/ansible/latest/user_guide/intro_getting_started.html)
-  - [Tower User Guide](https://docs.ansible.com/ansible-tower/latest/html/userguide/index.html)
-  - [Ansible Community Info](https://docs.ansible.com/ansible/latest/community/index.html)
+ - [Main Ansible documentation page](https://docs.ansible.com)
+ - [Ansible Getting Started](https://docs.ansible.com/ansible/latest/user_guide/intro_getting_started.html)
+ - [Tower User Guide](https://docs.ansible.com/ansible-tower/latest/html/userguide/index.html)
+ - [Ansible Community Info](https://docs.ansible.com/ansible/latest/community/index.html)
 - Functioning Ansible and/or Tower Installed, configured, and running. This includes all of the base Ansible/Tower configurations, needed packages installed, and infrastructure setup.
 - Please read through the tasks in this role to gain an understanding of what each control is doing. Some of the tasks are disruptive and can have unintended consequences in a live production system. Also familiarize yourself with the variables in the defaults/main.yml file.
 
@@ -149,16 +155,16 @@ Note: More tests are run during audit as we check config and running state.
 ```txt
 
 ok: [ubuntu2404] => {
-    "msg": [
-        "The pre remediation audit results are: Count: 778, Failed: 330, Skipped: 38, Duration: 3.609s",
-        "The post remediation audit results are: Count: 778, Failed: 26, Skipped: 5, Duration: 4.280s",
-        "Full breakdown can be found in /opt",
-        ""
-    ]
+ "msg": [
+ "The pre remediation audit results are: Count: 778, Failed: 330, Skipped: 38, Duration: 3.609s",
+ "The post remediation audit results are: Count: 778, Failed: 26, Skipped: 5, Duration: 4.280s",
+ "Full breakdown can be found in /opt",
+ ""
+ ]
 }
 
 PLAY RECAP *******************************************************************************************************************************************
-default                    : ok=270  changed=23   unreachable=0    failed=0    skipped=140  rescued=0    ignored=0
+default : ok=270 changed=23 unreachable=0 failed=0 skipped=140 rescued=0 ignored=0
 ```
 
 ## Documentation
@@ -180,36 +186,36 @@ There are many tags available for added control precision. Each control has its 
 
 ### Conversion Format for NIST References:
 
-  1. Standard Prefix:
+ 1. Standard Prefix:
 
-    - All references are prefixed with "NIST".
+ - All references are prefixed with "NIST".
 
-  2. Standard Types:
+ 2. Standard Types:
 
-    - "800-53" references are formatted as NIST800-53.
-    - "800-53r5" references are formatted as NIST800-53R5 (with 'R' capitalized).
-    - "800-171" references are formatted as NIST800-171.
+ - "800-53" references are formatted as NIST800-53.
+ - "800-53r5" references are formatted as NIST800-53R5 (with 'R' capitalized).
+ - "800-171" references are formatted as NIST800-171.
 
-  3. Details:
+ 3. Details:
 
-    - Section and subsection numbers use periods (.) for numeric separators.
-    - Parenthetical elements are separated by underscores (_), e.g., IA-5(1)(d) becomes IA-5_1_d.
-    - Subsection letters (e.g., "b") are appended with an underscore.
+ - Section and subsection numbers use periods (.) for numeric separators.
+ - Parenthetical elements are separated by underscores (_), e.g., IA-5(1)(d) becomes IA-5_1_d.
+ - Subsection letters (e.g., "b") are appended with an underscore.
 Below is an example of the tag section from a control within this role. Using this example if you set your run to skip all controls with the tag services, this task will be skipped. The opposite can also happen where you run only controls tagged with services.
 
 ```sh
-      tags:
-      - level1-server
-      - level1-workstation
-      - scored
-      - avahi
-      - services
-      - patch
-      - rule_2.2.4
+ tags:
+ - level1-server
+ - level1-workstation
+ - scored
+ - avahi
+ - services
+ - patch
+ - rule_2.2.4
 ```
 
 
-## Community Contribution 🧑‍🤝‍🧑
+## Community Contribution
 
 We encourage you (the community) to contribute to this role. Please read the rules below.
 
@@ -218,7 +224,7 @@ We encourage you (the community) to contribute to this role. Please read the rul
 - Pull Requests into devel will confirm your commits have a GPG signature, Signed-off-by, and a functional test before being approved
 - Once your changes are merged and a more detailed review is complete, an authorized member will merge your changes into the main branch for a new release
 
-## Pipeline Testing 🔄
+## Pipeline Testing
 
 uses:
 
@@ -231,7 +237,7 @@ uses:
 ## Known Issues
 
 
-## Local Testing 💻
+## Local Testing
 
 ### example
 
@@ -251,7 +257,7 @@ local testing uses:
 - molecule-azure 0.5.0
 
 
-## Credits and Thanks 🙏
+## Credits and Thanks
 
 Massive thanks to the fantastic community and all its members.
 
