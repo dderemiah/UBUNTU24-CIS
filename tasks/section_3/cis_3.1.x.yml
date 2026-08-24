@@ -70,17 +70,17 @@
     - wireless
   block:
     - name: "3.1.2 | AUDIT | Ensure wireless interfaces are disabled | Discover is wireless adapter on system"
-      ansible.builtin.command: find /sys/class/net/*/ -type d -name wireless
+      ansible.builtin.shell: find /sys/class/net/*/ -type d -name wireless
       changed_when: false
       failed_when: prelim_wireless_adapters.rc not in [ 0, 1 ]
       check_mode: false
       register: prelim_wireless_adapters
 
     - name: "3.1.2 | AUDIT | Ensure wireless interfaces are disabled | If wireless adapter present capture module"
-      when: prelim_wireless_adapters.rc == 0
+      when: prelim_wireless_adapters.stdout | length > 0
       ansible.builtin.shell: |
         set -o pipefail
-        for driverdir in $(find /sys/class/net/*/ -type d -name wireless | xargs -0 dirname);
+        for driverdir in $(find /sys/class/net/*/ -type d -name wireless | xargs dirname);
           do basename "$(readlink -f "$driverdir"/device/driver/module)";
         done | sort -u
       args:
@@ -91,13 +91,15 @@
       register: discovered_wireless_modules
 
     - name: "3.1.2 | PATCH | Ensure wireless interfaces are disabled | if wireless adapter exist"
-      when: discovered_wireless_modules.stdout is defined
+      when:
+        - discovered_wireless_modules.stdout is defined
+        - discovered_wireless_modules.stdout | length > 0
       block:
         - name: "3.1.2 | PATCH | Ensure wireless interfaces are disabled | Create modprobe.d file"
           ansible.builtin.lineinfile:
             path: /etc/modprobe.d/{{ item }}.conf
-            regexp: '^(#)?install true(\\s|$)'
-            line: install {{ item }} true
+            regexp: "^(#)?install {{ item }}(\\s|$)"
+            line: "install {{ item }} true"
             create: true
             mode: 'go-wx'
           loop: "{{ discovered_wireless_modules.stdout_lines }}"

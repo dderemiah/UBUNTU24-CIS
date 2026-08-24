@@ -109,12 +109,13 @@
       when: ubtu24cis_aide_scan == 'cron'
       ansible.builtin.systemd:
         name: "{{ item }}"
-        state: stopped
-        enabled: false
-        daemon_reload: true
+        state: "{{ ('aide-common' in ansible_facts['packages']) | ternary('stopped', omit) }}"
+        masked: true
       loop:
         - dailyaidecheck.service
         - dailyaidecheck.timer
+      loop_control:
+        label: "{{ item }}"
 
     - name: "6.3.2 | PATCH | Ensure filesystem integrity is regularly checked | timer template"
       when: ubtu24cis_aide_scan == 'timer'
@@ -146,8 +147,8 @@
     - ubtu24cis_rule_6_3_3
     - ubtu24cis_config_aide
   tags:
-    - level1-server
-    - level1-workstation
+    - level2-server
+    - level2-workstation
     - aide
     - file_integrity
     - patch

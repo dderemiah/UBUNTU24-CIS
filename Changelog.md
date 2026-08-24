@@ -1,5 +1,60 @@
 # Ubuntu24CIS
 
+## Based on CIS v1.0.0 - August 2026
+
+### Fixed
+
+- tasks/section_3/cis_3.1.x.yml 3.1.2: discovery used `command` with a shell glob, so `find` never matched and every
+  downstream task was skipped - the control never applied in any configuration. Also `xargs -0` on newline-delimited
+  input, and a single-quoted `regexp` that looked for a literal backslash and omitted the module name
+- tasks/section_6/cis_6.3.x.yml 6.3.2: the dailyaidecheck mask hardcoded `state: stopped`, so the play failed on an
+  unknown unit whenever aide was not installed - now guarded by the package-presence ternary
+- CONTRIBUTING.md replaced with the canonical version, README Contributing section added
+- README.md: X badge still used the twitter.com shields endpoint
+- tasks/section_4/cis_4.4.3.x.yml: `level1-workstation` tag carried a stray non-ASCII character, so the task was skipped in tagged workstation runs
+- 16 controls carried level tags that disagreed with the benchmark Profile Applicability: 6.2.4.1-6.2.4.10 and 6.3.3 are Level 2, 1.7.8, 1.7.9, 6.1.2.2 and 4.4.3.1 are Level 1 workstation, 2.1.11 is Level 2 workstation
+- tasks/section_6/cis_6.1.3.x.yml 6.1.3.6: now deploys the benchmark drop-in `/etc/rsyslog.d/60-rsyslog.conf` from the existing (previously unused) template instead of appending legacy `*.* @@host` syntax to `/etc/rsyslog.conf`
+- tasks/section_6/cis_6.1.2.x.yml 6.1.2.1.4: journal-remote mask used hardcoded `state`/`enabled`, which fails when the unit is absent - now guarded by the package-presence ternary
+- tasks/section_2/cis_2.3.2.x.yml 2.3.2.2: chrony and ntp masks were gated on package presence with `when`, losing the mask when the package was absent - now use the ternary guard; added the missing `patch` tag
+- tasks/section_5/cis_5.3.3.2.x.yml and tasks/section_6/cis_6.2.4.x.yml: two untagged prep tasks registered variables consumed by tagged controls, so tagged runs failed on an undefined register
+- tasks/remount_tmp.yml: `listen` on the `import_tasks` handler did not reach the imported tasks, so the only /tmp
+  handler that ever ran was the systemd one, which skips when `ubtu24cis_tmp_svc` is false. /tmp never received
+  nodev, nosuid or noexec and 1.1.2.1.2-4 reported changed on every run. Tasks flattened, each carrying its own `listen`
+- tasks/section_6/cis_6.1.4.1.yml: the btmp/utmp/wtmp/lastlog task ANDed four mutually exclusive equality tests, so it
+  never ran and those four files never had their permissions set
+- tasks/section_6/cis_6.2.4.x.yml: 6.2.4.1 applied `u-x` recursively from the audit log directory, leaving
+  `/var/log/audit` as `drw-r-----`; now finds files and sets the mode on those only
+- tasks/section_5/cis_5.4.2.x.yml: 5.4.2.8 lacked `create_home: false`, so the user module recreated tmpfs homes
+  (irc -> /run/ircd) and reported changed on every run
+- tasks/section_5/cis_5.4.1.x.yml: 5.4.1.5 selected accounts with `$7~/(\s*|-1)/`, which matches every value
+  because `\s*` matches an empty string, and then only flagged inactive values *below* the target. Compliant
+  accounts were re-set on every run; now flags empty, -1 or values above `ubtu24cis_pass_inactive`
+- tasks/section_6/cis_6.3.x.yml: 6.3.2 disabled a static unit and forced a daemon reload every run; the cron branch
+  now masks the dailyaidecheck units
+- tasks/section_4/cis_4.2.x.yml: the optional `IPT_SYSCTL` task was tagged `always`, so it ran in tag-limited runs that never install ufw and failed on the missing `/etc/default/ufw` - now carries the section tags
+- tasks/main.yml: `version_compare` replaced with the canonical `version` test
+- tasks/section_5/cis_5.3.2.x.yml: `register` declared before `changed_when` in 8 tasks
+- tasks/section_1/cis_1.4.x.yml and tasks/section_5/cis_5.1.x.yml: absolute symbolic modes replaced with relative
+- templates/lockdown_audit.yml.j2: `ubtu24cis_dconf_db_name` and `ubtu24cis_warning_banner` were hardcoded rather than rendered from role values; added `ubtu24cis_screensaver_idle_delay` and `ubtu24cis_screensaver_lock_delay` so 1.7.4 and 1.7.5 can be audited
+- templates/fs_with_cves.sh.j2: added the managed-by-ansible header
+- Title separators corrected in 1.5.4, 5.1.4 and 5.4.1.5
+- Removed two commented-out task blocks in section 4 (iptables persistence, now handled by handlers)
+- README.md: emoticons removed
+
+### Community reported
+
+- #178 thanks to @alexmroke, with reproduction by @bykvaadm - /etc/grub.d/00_user lost its executable bit, so
+  grub-mkconfig skipped it and the password never reached grub.cfg. Mode is now `go-w,a+rx`, which resolves to
+  0755 whatever the host umask
+- #182 thanks to @zac90 - the `5.3.3.2.x | Look for existing configs` task had no tags, so tagged runs skipped it
+  and every dependent control failed on an undefined register
+- #185 thanks to @jbruno, with the interim workaround from @r2zer0-xsystem - `audit_file_git` and
+  `audit_git_version` sat in `vars/`, which outranks inventory. They are now defaults, so they can be set from
+  inventory, group_vars or `-e` without any `_override` indirection
+- #177 thanks to @bykvaadm - documented that Docker 29+ hard-depends on nftables, so 4.4.1.2 removes docker-ce
+  along with it
+- #158 thanks to @seven-beep - documented the AppArmor profile conflict and the variables that opt out of it
+
 ## Based on CIS v1.0.0 - July 2026
 
 ### Fixed

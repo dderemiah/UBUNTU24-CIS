@@ -12,7 +12,7 @@
 ![Stars](https://img.shields.io/github/stars/ansible-lockdown/UBUNTU24-CIS?label=Repo%20Stars&style=social)
 ![Forks](https://img.shields.io/github/forks/ansible-lockdown/UBUNTU24-CIS?style=social)
 ![Followers](https://img.shields.io/github/followers/ansible-lockdown?style=social)
-[![X URL](https://img.shields.io/twitter/url/https/twitter.com/AnsibleLockdown.svg?style=social&label=Follow%20%40AnsibleLockdown)](https://x.com/AnsibleLockdown)
+[![X URL](https://img.shields.io/twitter/url/https/x.com/AnsibleLockdown.svg?style=social&label=Follow%20%40AnsibleLockdown)](https://x.com/AnsibleLockdown)
 ![Discord Badge](https://img.shields.io/discord/925818806838919229?logo=discord)
 
 ![License](https://img.shields.io/github/license/ansible-lockdown/UBUNTU24-CIS?label=License)
@@ -117,10 +117,10 @@ The control found in defaults main also need to reflect this as this control the
 
 - Basic knowledge of Ansible, below are some links to the Ansible documentation to help get started if you are unfamiliar with Ansible
 
- - [Main Ansible documentation page](https://docs.ansible.com)
- - [Ansible Getting Started](https://docs.ansible.com/ansible/latest/user_guide/intro_getting_started.html)
- - [Tower User Guide](https://docs.ansible.com/ansible-tower/latest/html/userguide/index.html)
- - [Ansible Community Info](https://docs.ansible.com/ansible/latest/community/index.html)
+  - [Main Ansible documentation page](https://docs.ansible.com)
+  - [Ansible Getting Started](https://docs.ansible.com/ansible/latest/user_guide/intro_getting_started.html)
+  - [Tower User Guide](https://docs.ansible.com/ansible-tower/latest/html/userguide/index.html)
+  - [Ansible Community Info](https://docs.ansible.com/ansible/latest/community/index.html)
 - Functioning Ansible and/or Tower Installed, configured, and running. This includes all of the base Ansible/Tower configurations, needed packages installed, and infrastructure setup.
 - Please read through the tasks in this role to gain an understanding of what each control is doing. Some of the tasks are disruptive and can have unintended consequences in a live production system. Also familiarize yourself with the variables in the defaults/main.yml file.
 
@@ -155,16 +155,16 @@ Note: More tests are run during audit as we check config and running state.
 ```txt
 
 ok: [ubuntu2404] => {
- "msg": [
- "The pre remediation audit results are: Count: 778, Failed: 330, Skipped: 38, Duration: 3.609s",
- "The post remediation audit results are: Count: 778, Failed: 26, Skipped: 5, Duration: 4.280s",
- "Full breakdown can be found in /opt",
- ""
- ]
+    "msg": [
+        "The pre remediation audit results are: Count: 778, Failed: 330, Skipped: 38, Duration: 3.609s",
+        "The post remediation audit results are: Count: 778, Failed: 26, Skipped: 5, Duration: 4.280s",
+        "Full breakdown can be found in /opt",
+        ""
+    ]
 }
 
 PLAY RECAP *******************************************************************************************************************************************
-default : ok=270 changed=23 unreachable=0 failed=0 skipped=140 rescued=0 ignored=0
+default                    : ok=270  changed=23   unreachable=0    failed=0    skipped=140  rescued=0    ignored=0
 ```
 
 ## Documentation
@@ -186,32 +186,32 @@ There are many tags available for added control precision. Each control has its 
 
 ### Conversion Format for NIST References:
 
- 1. Standard Prefix:
+  1. Standard Prefix:
 
- - All references are prefixed with "NIST".
+    - All references are prefixed with "NIST".
 
- 2. Standard Types:
+  2. Standard Types:
 
- - "800-53" references are formatted as NIST800-53.
- - "800-53r5" references are formatted as NIST800-53R5 (with 'R' capitalized).
- - "800-171" references are formatted as NIST800-171.
+    - "800-53" references are formatted as NIST800-53.
+    - "800-53r5" references are formatted as NIST800-53R5 (with 'R' capitalized).
+    - "800-171" references are formatted as NIST800-171.
 
- 3. Details:
+  3. Details:
 
- - Section and subsection numbers use periods (.) for numeric separators.
- - Parenthetical elements are separated by underscores (_), e.g., IA-5(1)(d) becomes IA-5_1_d.
- - Subsection letters (e.g., "b") are appended with an underscore.
+    - Section and subsection numbers use periods (.) for numeric separators.
+    - Parenthetical elements are separated by underscores (_), e.g., IA-5(1)(d) becomes IA-5_1_d.
+    - Subsection letters (e.g., "b") are appended with an underscore.
 Below is an example of the tag section from a control within this role. Using this example if you set your run to skip all controls with the tag services, this task will be skipped. The opposite can also happen where you run only controls tagged with services.
 
 ```sh
- tags:
- - level1-server
- - level1-workstation
- - scored
- - avahi
- - services
- - patch
- - rule_2.2.4
+      tags:
+      - level1-server
+      - level1-workstation
+      - scored
+      - avahi
+      - services
+      - patch
+      - rule_2.2.4
 ```
 
 
@@ -236,6 +236,17 @@ uses:
 
 ## Known Issues
 
+- **Docker hosts and control 4.4.1.2** - since Docker 29.0.0 the `docker-ce` package hard-depends on `nftables`.
+  With `ubtu24cis_firewall_package: iptables`, control 4.4.1.2 removes `nftables` and apt takes `docker-ce`
+  with it. On Docker hosts either keep the default `ubtu24cis_firewall_package: ufw`, choose `nftables`, or set
+  `ubtu24cis_rule_4_4_1_2: false`. Reported in
+  [#177](https://github.com/ansible-lockdown/UBUNTU24-CIS/issues/177) by @bykvaadm.
+
+- **AppArmor profiles and controls 1.3.1.3 / 1.3.1.4** - Ubuntu 24.04 ships profiles that are intentionally
+  unconfined, and enforcing all of them can break applications such as Docker via the `runc` profile. The role
+  implements the benchmark as written; set `ubtu24cis_rule_1_3_1_4: false`, or `ubtu24cis_apparmor_disable: true`
+  for both controls, where that conflicts with your workload. Reported in
+  [#158](https://github.com/ansible-lockdown/UBUNTU24-CIS/issues/158) by @seven-beep.
 
 ## Local Testing
 

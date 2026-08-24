@@ -501,7 +501,7 @@ ubtu24cis_bootloader_password_hash: {{ ubtu24cis_bootloader_password_hash }}  # 
 # Noe that the banner text must not contain the below items in order to be
 # compliant with CIS: \m, \r, \s, \v or references to the OS platform
 ubtu24cis_warning_banner: |
-        Authorized uses only. All activity may be monitored and reported.
+{{ ubtu24cis_warning_banner | trim | indent(8, true) }}
 
 # This variable governs, whether dynamic motd is disabled (as required by control 1.7.1)
 ubtu24cis_disable_dynamic_motd: {{ ubtu24cis_disable_dynamic_motd }}
@@ -510,7 +510,10 @@ ubtu24cis_disable_dynamic_motd: {{ ubtu24cis_disable_dynamic_motd }}
 # This variable specifies the GNOME configuration database file to which configurations are written.
 # (See https://help.gnome.org/admin/system-admin-guide/stable/dconf-keyfiles.html.en)
 # The default database is `local`.
-ubtu24cis_dconf_db_name: local
+ubtu24cis_dconf_db_name: {{ ubtu24cis_dconf_db_name }}
+# Screen lock timings written to the dconf screensaver keyfile (controls 1.7.4 / 1.7.5)
+ubtu24cis_screensaver_idle_delay: {{ ubtu24cis_screensaver_idle_delay }}
+ubtu24cis_screensaver_lock_delay: {{ ubtu24cis_screensaver_lock_delay }}
 
 ##
 # Section 2

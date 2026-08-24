@@ -4,7 +4,7 @@
   when:
     - os_check
     - ansible_facts['distribution'] == 'Ubuntu'
-    - ansible_facts['distribution_major_version'] is version_compare('24', '!=')
+    - ansible_facts['distribution_major_version'] is version('24', '!=')
   tags: always
   ansible.builtin.fail:
     msg: "This role can only be run against Ubuntu 24. {{ ansible_facts['distribution'] }} {{ ansible_facts['distribution_major_version'] }} is not supported."
@@ -12,7 +12,7 @@
 - name: Check ansible version
   tags: always
   ansible.builtin.assert:
-    that: ansible_version.full is version_compare(min_ansible_version, '>=')
+    that: ansible_version.full is version(min_ansible_version, '>=')
     fail_msg: "You must use Ansible {{ min_ansible_version }} or greater"
     success_msg: "This role is running a supported version of ansible {{ ansible_version.full }} >= {{ min_ansible_version }}"
 

@@ -8,14 +8,6 @@
     lock_timeout: "{{ ubtu24cis_apt_lock_timeout }}"
   changed_when: not ubtu24cis_ignore_apt_update_changed_when
 
-- name: Include audit specific variables
-  when: run_audit or audit_only or setup_audit
-  tags:
-    - setup_audit
-    - run_audit
-  ansible.builtin.include_vars:
-    file: audit.yml
-
 - name: Include pre-remediation audit tasks
   when: run_audit or audit_only or setup_audit
   tags:
