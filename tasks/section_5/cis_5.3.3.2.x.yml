@@ -28,6 +28,18 @@
     mode: 'u+x,g-w,o-rwx'
 
 - name: "5.3.3.2.x | PATCH | Look for existing configs"
+  tags:
+    - level1-server
+    - level1-workstation
+    - patch
+    - pam
+    - rule_5.3.3.2.1
+    - rule_5.3.3.2.2
+    - rule_5.3.3.2.3
+    - rule_5.3.3.2.4
+    - rule_5.3.3.2.5
+    - rule_5.3.3.2.6
+    - NIST800-53R5_IA-5
   ansible.builtin.find:
     paths:
       - /etc/security/pwquality.conf.d/

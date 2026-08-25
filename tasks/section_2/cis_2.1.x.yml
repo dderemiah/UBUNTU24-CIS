@@ -349,6 +349,7 @@
   when: ubtu24cis_rule_2_1_11
   tags:
     - level1-server
+    - level2-workstation
     - patch
     - cups
     - rule_2.1.11
