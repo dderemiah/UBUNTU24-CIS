@@ -43,6 +43,16 @@
 
 ### Community reported
 
+- #183 thanks to @zac90 - the 6.2.4.1-4 logfile discovery ran `grep ^log_file /etc/audit/auditd.conf` under
+  `set -o pipefail`, gated only on the rule toggles. With auditd absent grep exits 2 and the play aborted. rc 1 was
+  already tolerated, so a host with auditd but no `log_file` line left an empty stdout that four consumers passed to
+  `| dirname` as an empty path. Now gated on `'auditd' in ansible_facts['packages']`, rc 2 tolerated, the path falls
+  back to `/var/log/audit/audit.log`, and 6.2.4.4 only sets permissions when the directory exists. The level tags were
+  corrected separately - the controls were `level1` while the auditd install at 6.2.1.1 is `level2`
+- #188 thanks to @golflimaechoecho, fix contributed as PR #189 - the `usr/share/pam-configs` templates carried the
+  managed-by-ansible header and a blank line. `pam-auth-update` cannot parse comments or blank lines in these profiles
+  (Ubuntu LP #2075508), so it emitted `Use of uninitialized value $fieldname` and skipped the profile entirely. Header
+  and blank line removed from all five templates
 - #178 thanks to @alexmroke, with reproduction by @bykvaadm - /etc/grub.d/00_user lost its executable bit, so
   grub-mkconfig skipped it and the password never reached grub.cfg. Mode is now `go-w,a+rx`, which resolves to
   0755 whatever the host umask

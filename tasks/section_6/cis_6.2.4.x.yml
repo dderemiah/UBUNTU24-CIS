@@ -6,6 +6,7 @@
       ubtu24cis_rule_6_2_4_2 or
       ubtu24cis_rule_6_2_4_3 or
       ubtu24cis_rule_6_2_4_4
+    - "'auditd' in ansible_facts['packages']"
   tags:
     - level2-server
     - level2-workstation
@@ -23,7 +24,7 @@
     executable: "{{ ubtu24cis_shell_executable }}"
   changed_when: false
   check_mode: false
-  failed_when: discovered_auditd_logfile.rc not in [ 0, 1 ]
+  failed_when: discovered_auditd_logfile.rc not in [ 0, 1, 2 ]
   register: discovered_auditd_logfile
 
 - name: "6.2.4.5/6/7 | AUDIT | Audit conf and rules files | list files"
@@ -48,7 +49,9 @@
   register: discovered_auditd_conf_file
 
 - name: "6.2.4.1 | PATCH | Ensure audit log files mode is configured"
-  when: ubtu24cis_rule_6_2_4_1
+  when:
+    - ubtu24cis_rule_6_2_4_1
+    - "'auditd' in ansible_facts['packages']"
   tags:
     - level2-server
     - level2-workstation
@@ -59,7 +62,7 @@
   block:
     - name: "6.2.4.1 | AUDIT | Ensure audit log files mode is configured | find logfiles"
       ansible.builtin.find:
-        path: "{{ discovered_auditd_logfile.stdout | dirname }}"
+        path: "{{ discovered_auditd_logfile.stdout | default('/var/log/audit/audit.log', true) | dirname }}"
         file_type: file
       register: discovered_auditd_logfile_modes
 
@@ -72,7 +75,9 @@
         label: "{{ item.path }}"
 
 - name: "6.2.4.2 | PATCH | Ensure audit log files owner is configured"
-  when: ubtu24cis_rule_6_2_4_2
+  when:
+    - ubtu24cis_rule_6_2_4_2
+    - "'auditd' in ansible_facts['packages']"
   tags:
     - level2-server
     - level2-workstation
@@ -81,12 +86,14 @@
     - rule_6.2.4.2
     - NIST800-53R5_AU-3
   ansible.builtin.file:
-    path: "{{ discovered_auditd_logfile.stdout | dirname }}"
+    path: "{{ discovered_auditd_logfile.stdout | default('/var/log/audit/audit.log', true) | dirname }}"
     recurse: true
     owner: root
 
 - name: "6.2.4.3 | PATCH | Ensure audit log files group owner is configured"
-  when: ubtu24cis_rule_6_2_4_3
+  when:
+    - ubtu24cis_rule_6_2_4_3
+    - "'auditd' in ansible_facts['packages']"
   tags:
     - level2-server
     - level2-workstation
@@ -97,7 +104,7 @@
   block:
     - name: "6.2.4.3 | AUDIT | Ensure audit log files group owner is configured | stat logfile"
       ansible.builtin.find:
-        path: "{{ discovered_auditd_logfile.stdout | dirname }}"
+        path: "{{ discovered_auditd_logfile.stdout | default('/var/log/audit/audit.log', true) | dirname }}"
         file_type: file
       register: discovered_auditd_logs
 
@@ -111,7 +118,9 @@
         label: "{{ item.path }}"
 
 - name: "6.2.4.4 | PATCH | Ensure the audit log file directory mode is configured"
-  when: ubtu24cis_rule_6_2_4_4
+  when:
+    - ubtu24cis_rule_6_2_4_4
+    - "'auditd' in ansible_facts['packages']"
   tags:
     - level2-server
     - level2-workstation
@@ -122,10 +131,11 @@
   block:
     - name: "6.2.4.4 | AUDIT | Ensure the audit log file directory mode is configured | get current permissions"
       ansible.builtin.stat:
-        path: "{{ discovered_auditd_logfile.stdout | dirname }}"
+        path: "{{ discovered_auditd_logfile.stdout | default('/var/log/audit/audit.log', true) | dirname }}"
       register: discovered_auditlog_dir
 
     - name: "6.2.4.4 | PATCH | Ensure the audit log file directory mode is configured | set permissions"
+      when: discovered_auditlog_dir.stat.exists
       ansible.builtin.file:
         path: "{{ discovered_auditlog_dir.stat.path }}"
         state: directory
