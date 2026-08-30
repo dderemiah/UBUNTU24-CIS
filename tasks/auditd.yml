@@ -3,7 +3,7 @@
 # Since auditd rules are dependent on syscalls and syscall tables are architecture specific,
 # we need to update the auditd rules depending on the architecture of the system.
 # This task passed the syscalls table to the auditd template and updates the auditd rules
-- name: "POST | AUDITD | Set supported_syscalls variable"
+- name: "POST | AUDIT | Set supported_syscalls variable"
   ansible.builtin.shell: |
     set -o pipefail
     ausyscall --dump |  awk  '{print $2}'
@@ -14,7 +14,7 @@
   check_mode: false
   register: discovered_auditd_syscalls
 
-- name: "POST | AUDITD | Ensure use of privileged commands is collected"
+- name: "POST | AUDIT | Ensure use of privileged commands is collected"
   ansible.builtin.shell: |
     set -o pipefail
     for i in $(df | grep '^/dev' | grep -Ev '{{ exclude_options }}' | awk '{ print $NF }');
