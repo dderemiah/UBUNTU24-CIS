@@ -21,8 +21,8 @@
 - name: "1.5.2 | PATCH | Ensure ptrace_scope is restricted"
   when: ubtu24cis_rule_1_5_2
   tags:
-    - level1-server
-    - level1-workstation
+    - level2-server
+    - level2-workstation
     - patch
     - rule_1.5.2
     - NIST800-53R5_CM-6

@@ -28,6 +28,7 @@
 - templates/fs_with_cves.sh.j2: added the managed-by-ansible header
 - Title separators corrected in 1.5.4, 5.1.4 and 5.4.1.5
 - Removed two commented-out task blocks in section 4 (iptables persistence, now handled by handlers)
+- issues collecting privilege comamnds for audit thanks to @dderemiah
 - README.md: emoticons removed
 
 ### Community reported
