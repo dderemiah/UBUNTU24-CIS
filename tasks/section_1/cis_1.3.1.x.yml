@@ -90,8 +90,8 @@
     - ubtu24cis_rule_1_3_1_4
     - not ubtu24cis_apparmor_disable
   tags:
-    - level2-server
-    - level2-workstation
+    - level1-server
+    - level1-workstation
     - scored
     - patch
     - rule_1.3.1.4
@@ -143,8 +143,8 @@
     - not ubtu24cis_apparmor_disable
     - not control_1_3_1_4_was_run
   tags:
-    - level1-server
-    - level1-workstation
+    - level2-server
+    - level2-workstation
     - patch
     - rule_1.3.1.3
     - NIST800-53R5_AC-3
