@@ -7,8 +7,7 @@
     - ubtu24cis_disruption_high
     - "'gdm3' in ansible_facts['packages']"
   tags:
-    - level1-server
-    - level1-workstation
+    - level2-server
     - patch
     - rule_1.7.1
     - NIST800-53R5_CM-11
@@ -126,7 +125,7 @@
     - ubtu24cis_desktop_required
   tags:
     - level1-server
-    - level2-workstation
+    - level1-workstation
     - patch
     - rule_1.7.4
     - NIST800-53R5_NA
@@ -200,7 +199,7 @@
     - ubtu24cis_desktop_required
   tags:
     - level1-server
-    - level1-workstation
+    - level2-workstation
     - patch
     - rule_1.7.6
     - NIST800-53R5_CM-1
@@ -233,7 +232,7 @@
     - ubtu24cis_rule_1_7_7
     - ubtu24cis_desktop_required
   tags:
-    - level2-server
+    - level1-server
     - level2-workstation
     - patch
     - rule_1.7.7

@@ -2,8 +2,8 @@
 
 - name: "7.2.9/10 | AUDIT | Interactive User accounts home directories"
   when:
-    - ubtu24cis_rule_7_2_9
-    - ubtu24cis_rule_7_2_10
+    - ubtu24cis_rule_7_2_9 or
+      ubtu24cis_rule_7_2_10
   tags:
     - level1-server
     - level1-workstation

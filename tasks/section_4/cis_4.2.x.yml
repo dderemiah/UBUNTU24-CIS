@@ -102,6 +102,7 @@
     - level1-server
     - level1-workstation
     - audit
+    - patch
     - rule_4.2.5
     - NIST800-53R5_SC-7
     - ufw
